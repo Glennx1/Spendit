@@ -36,10 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.spendsplit.app.ui.theme.CardBorder
-import com.spendsplit.app.ui.theme.CardBorderSubtle
-import com.spendsplit.app.ui.theme.MutedSurface
-import com.spendsplit.app.ui.theme.ObsidianBlack
 
 enum class TimePeriod(val label: String) {
     DAY("Day"),
@@ -73,14 +69,13 @@ fun SpendOverTimeChart(
     }
 
     val maxAmount = (dataPoints.maxOfOrNull { it.amount } ?: 1.0).coerceAtLeast(1.0)
-    val barColor = ObsidianBlack
-    val trackColor = CardBorderSubtle
-    val highlightColor = MaterialTheme.colorScheme.primary
+    val barColor = MaterialTheme.colorScheme.primary
+    val trackColor = MaterialTheme.colorScheme.surfaceVariant
 
     Surface(
         shape = RoundedCornerShape(20.dp),
         color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(1.dp, CardBorder),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         modifier = modifier.fillMaxWidth()
     ) {
         Column(
@@ -93,13 +88,14 @@ fun SpendOverTimeChart(
             ) {
                 Text(
                     text = "Spend Over Time",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 // Period Pill Toggle
                 Row(
                     modifier = Modifier
-                        .background(MutedSurface, shape = CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape)
                         .padding(3.dp)
                 ) {
                     TimePeriod.values().forEach { period ->
@@ -107,7 +103,7 @@ fun SpendOverTimeChart(
                         Box(
                             modifier = Modifier
                                 .clip(CircleShape)
-                                .background(if (isSelected) ObsidianBlack else Color.Transparent)
+                                .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
                                 .clickable { onPeriodSelected(period) }
                                 .padding(horizontal = 12.dp, vertical = 5.dp),
                             contentAlignment = Alignment.Center
@@ -116,7 +112,7 @@ fun SpendOverTimeChart(
                                 text = period.label,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }
@@ -145,7 +141,7 @@ fun SpendOverTimeChart(
                     Text(
                         text = "${activePoint.fullDateLabel}: ${CurrencyUtils.formatAmount(activePoint.amount, currency)}",
                         style = MaterialTheme.typography.labelMedium.copy(
-                            color = ObsidianBlack,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold
                         )
                     )
@@ -158,6 +154,7 @@ fun SpendOverTimeChart(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
+                val primaryColor = MaterialTheme.colorScheme.primary
                 Canvas(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -189,7 +186,7 @@ fun SpendOverTimeChart(
                         // Filled bar
                         val isHighlighted = selectedPointIndex == index || (selectedPointIndex == null && point.amount == maxAmount && point.amount > 0)
                         drawRoundRect(
-                            color = if (isHighlighted) ObsidianBlack else ObsidianBlack.copy(alpha = 0.55f),
+                            color = if (isHighlighted) primaryColor else primaryColor.copy(alpha = 0.55f),
                             topLeft = Offset(x, y),
                             size = Size(barWidth, barHeight.coerceAtLeast(4.dp.toPx())),
                             cornerRadius = CornerRadius(6.dp.toPx(), 6.dp.toPx())
@@ -216,7 +213,7 @@ fun SpendOverTimeChart(
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontSize = 11.sp,
                                     fontWeight = if (selectedPointIndex == index) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (selectedPointIndex == index) ObsidianBlack else MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = if (selectedPointIndex == index) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }

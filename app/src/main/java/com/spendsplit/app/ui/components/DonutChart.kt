@@ -41,9 +41,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.spendsplit.app.ui.theme.CardBorder
-import com.spendsplit.app.ui.theme.CardBorderSubtle
-import com.spendsplit.app.ui.theme.MutedSurface
 import kotlin.math.atan2
 
 data class CategorySpendItem(
@@ -75,6 +72,8 @@ fun DonutChart(
             animationSpec = tween(durationMillis = 650, easing = FastOutSlowInEasing)
         )
     }
+
+    val trackColor = MaterialTheme.colorScheme.surfaceVariant
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -121,7 +120,7 @@ fun DonutChart(
 
                 // Background track
                 drawArc(
-                    color = CardBorderSubtle,
+                    color = trackColor,
                     startAngle = 0f,
                     sweepAngle = 360f,
                     useCenter = false,
@@ -214,8 +213,8 @@ fun DonutChart(
 
                 Surface(
                     shape = CircleShape,
-                    color = if (isSelected) color.copy(alpha = 0.15f) else MutedSurface,
-                    border = BorderStroke(1.dp, if (isSelected) color else CardBorder),
+                    color = if (isSelected) color.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant,
+                    border = BorderStroke(1.dp, if (isSelected) color else MaterialTheme.colorScheme.outline),
                     modifier = Modifier.clickable {
                         onCategoryClick(if (isSelected) null else item.categoryId)
                     }

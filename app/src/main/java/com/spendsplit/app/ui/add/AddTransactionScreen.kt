@@ -81,15 +81,8 @@ import com.spendsplit.app.data.local.entity.PersonEntity
 import com.spendsplit.app.ui.components.CategoryIconBadge
 import com.spendsplit.app.ui.components.CategoryIcons
 import com.spendsplit.app.ui.components.CurrencyUtils
-import com.spendsplit.app.ui.theme.AccentBlack
-import com.spendsplit.app.ui.theme.BeigeBackground
-import com.spendsplit.app.ui.theme.CardBorder
-import com.spendsplit.app.ui.theme.CardBorderSubtle
-import com.spendsplit.app.ui.theme.CharcoalSecondary
 import com.spendsplit.app.ui.theme.GreenPositive
 import com.spendsplit.app.ui.theme.GreenPositiveBg
-import com.spendsplit.app.ui.theme.MutedSurface
-import com.spendsplit.app.ui.theme.ObsidianBlack
 import com.spendsplit.app.ui.theme.RedNegative
 import com.spendsplit.app.ui.theme.RedNegativeBg
 import java.text.SimpleDateFormat
@@ -139,17 +132,17 @@ fun AddTransactionScreen(
                         "New Entry",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
-                            color = ObsidianBlack
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = BeigeBackground
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = BeigeBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -170,8 +163,8 @@ fun AddTransactionScreen(
                     val isSelected = uiState.transactionType == type
                     Surface(
                         shape = CircleShape,
-                        color = if (isSelected) AccentBlack else MutedSurface,
-                        border = BorderStroke(1.dp, if (isSelected) AccentBlack else CardBorder),
+                        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                        border = BorderStroke(1.dp, if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
                         modifier = Modifier.clickable { viewModel.onTransactionTypeSelected(type) }
                     ) {
                         Row(
@@ -182,7 +175,7 @@ fun AddTransactionScreen(
                                 Icon(
                                     Icons.Default.Check,
                                     contentDescription = null,
-                                    tint = Color.White,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
                                     modifier = Modifier.size(14.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
@@ -191,7 +184,7 @@ fun AddTransactionScreen(
                                 text = type.label,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isSelected) Color.White else CharcoalSecondary
+                                    color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }
@@ -203,7 +196,7 @@ fun AddTransactionScreen(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, CardBorder),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
@@ -214,7 +207,7 @@ fun AddTransactionScreen(
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp,
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                         Spacer(modifier = Modifier.height(6.dp))
@@ -222,13 +215,13 @@ fun AddTransactionScreen(
                         OutlinedTextField(
                             value = uiState.totalAmountText,
                             onValueChange = viewModel::onTotalAmountChanged,
-                            placeholder = { Text("0.00", color = CharcoalSecondary.copy(alpha = 0.5f)) },
+                            placeholder = { Text("0.00", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
                             prefix = {
                                 Text(
                                     "$currency ",
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = ObsidianBlack
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             },
                             textStyle = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
@@ -237,15 +230,17 @@ fun AddTransactionScreen(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(14.dp),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = ObsidianBlack,
-                                unfocusedBorderColor = CardBorder,
-                                focusedContainerColor = MutedSurface.copy(alpha = 0.3f),
-                                unfocusedContainerColor = MutedSurface.copy(alpha = 0.2f)
+                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
                             )
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
-                        HorizontalDivider(color = CardBorderSubtle)
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                         Spacer(modifier = Modifier.height(14.dp))
 
                         // Split Mode: Equal vs Custom Pill Toggle
@@ -256,18 +251,19 @@ fun AddTransactionScreen(
                         ) {
                             Text(
                                 text = "Split Allocation",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Row(
                                 modifier = Modifier
-                                    .background(MutedSurface, CircleShape)
+                                    .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
                                     .padding(3.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
                                         .clip(CircleShape)
-                                        .background(if (uiState.isSplitEqually) AccentBlack else Color.Transparent)
+                                        .background(if (uiState.isSplitEqually) MaterialTheme.colorScheme.primary else Color.Transparent)
                                         .clickable { viewModel.toggleSplitEqually(true) }
                                         .padding(horizontal = 12.dp, vertical = 6.dp)
                                 ) {
@@ -275,14 +271,14 @@ fun AddTransactionScreen(
                                         "Equally",
                                         style = MaterialTheme.typography.labelSmall.copy(
                                             fontWeight = if (uiState.isSplitEqually) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (uiState.isSplitEqually) Color.White else CharcoalSecondary
+                                            color = if (uiState.isSplitEqually) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     )
                                 }
                                 Box(
                                     modifier = Modifier
                                         .clip(CircleShape)
-                                        .background(if (!uiState.isSplitEqually) AccentBlack else Color.Transparent)
+                                        .background(if (!uiState.isSplitEqually) MaterialTheme.colorScheme.primary else Color.Transparent)
                                         .clickable { viewModel.toggleSplitEqually(false) }
                                         .padding(horizontal = 12.dp, vertical = 6.dp)
                                 ) {
@@ -290,7 +286,7 @@ fun AddTransactionScreen(
                                         "Custom",
                                         style = MaterialTheme.typography.labelSmall.copy(
                                             fontWeight = if (!uiState.isSplitEqually) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (!uiState.isSplitEqually) Color.White else CharcoalSecondary
+                                            color = if (!uiState.isSplitEqually) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     )
                                 }
@@ -304,7 +300,7 @@ fun AddTransactionScreen(
                             text = "Participants (${uiState.splitParticipants.size + 1})",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
 
@@ -313,8 +309,8 @@ fun AddTransactionScreen(
                         // 1. "You" Participant Row
                         Surface(
                             shape = RoundedCornerShape(14.dp),
-                            color = MutedSurface.copy(alpha = 0.45f),
-                            border = BorderStroke(1.dp, CardBorder),
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Row(
@@ -329,15 +325,15 @@ fun AddTransactionScreen(
                                         modifier = Modifier
                                             .size(34.dp)
                                             .clip(CircleShape)
-                                            .background(AccentBlack),
+                                            .background(MaterialTheme.colorScheme.primary),
                                         contentAlignment = Alignment.Center
                                     ) {
-                                        Text("You", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = Color.White, fontSize = 10.sp))
+                                        Text("You", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimary, fontSize = 10.sp))
                                     }
                                     Spacer(modifier = Modifier.width(10.dp))
                                     Column {
                                         Text("You (My share)", style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
-                                        Text("Logs as personal spend", style = MaterialTheme.typography.labelSmall.copy(color = CharcoalSecondary, fontSize = 10.sp))
+                                        Text("Logs as personal spend", style = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp))
                                     }
                                 }
 
@@ -352,10 +348,12 @@ fun AddTransactionScreen(
                                     modifier = Modifier.width(120.dp),
                                     shape = RoundedCornerShape(10.dp),
                                     colors = OutlinedTextFieldDefaults.colors(
-                                        focusedBorderColor = ObsidianBlack,
-                                        unfocusedBorderColor = CardBorder,
-                                        focusedContainerColor = Color.White,
-                                        unfocusedContainerColor = Color.White
+                                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
                                     )
                                 )
                             }
@@ -367,8 +365,8 @@ fun AddTransactionScreen(
                         uiState.splitParticipants.forEach { participant ->
                             Surface(
                                 shape = RoundedCornerShape(14.dp),
-                                color = MutedSurface.copy(alpha = 0.35f),
-                                border = BorderStroke(1.dp, CardBorder),
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp)
@@ -385,13 +383,13 @@ fun AddTransactionScreen(
                                             modifier = Modifier
                                                 .size(34.dp)
                                                 .clip(CircleShape)
-                                                .background(MutedSurface)
-                                                .border(1.dp, CardBorder, CircleShape),
+                                                .background(MaterialTheme.colorScheme.surface)
+                                                .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Text(
                                                 participant.person.name.take(1).uppercase(),
-                                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                                             )
                                         }
                                         Spacer(modifier = Modifier.width(10.dp))
@@ -413,17 +411,19 @@ fun AddTransactionScreen(
                                             modifier = Modifier.width(120.dp),
                                             shape = RoundedCornerShape(10.dp),
                                             colors = OutlinedTextFieldDefaults.colors(
-                                                focusedBorderColor = ObsidianBlack,
-                                                unfocusedBorderColor = CardBorder,
-                                                focusedContainerColor = Color.White,
-                                                unfocusedContainerColor = Color.White
+                                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                                unfocusedContainerColor = MaterialTheme.colorScheme.surface
                                             )
                                         )
                                         IconButton(
                                             onClick = { viewModel.removeSplitParticipant(participant.person.id) },
                                             modifier = Modifier.size(32.dp)
                                         ) {
-                                            Icon(Icons.Default.Close, contentDescription = "Remove", tint = CharcoalSecondary, modifier = Modifier.size(16.dp))
+                                            Icon(Icons.Default.Close, contentDescription = "Remove", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
                                         }
                                     }
                                 }
@@ -437,7 +437,7 @@ fun AddTransactionScreen(
                             Surface(
                                 shape = RoundedCornerShape(12.dp),
                                 color = Color.Transparent,
-                                border = BorderStroke(1.dp, CardBorder),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable { addSplitPersonDropdownExpanded = true }
@@ -447,11 +447,11 @@ fun AddTransactionScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Icon(Icons.Default.PersonAdd, contentDescription = null, tint = ObsidianBlack, modifier = Modifier.size(18.dp))
+                                    Icon(Icons.Default.PersonAdd, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(18.dp))
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         "+ Add Friend to Split",
-                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                                     )
                                 }
                             }
@@ -466,7 +466,7 @@ fun AddTransactionScreen(
 
                                 if (availablePersons.isEmpty()) {
                                     DropdownMenuItem(
-                                        text = { Text("No contacts available", color = CharcoalSecondary) },
+                                        text = { Text("No contacts available", color = MaterialTheme.colorScheme.onSurfaceVariant) },
                                         onClick = {}
                                     )
                                 } else {
@@ -484,9 +484,9 @@ fun AddTransactionScreen(
                                 DropdownMenuItem(
                                     text = {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Icon(Icons.Default.Add, contentDescription = null, tint = ObsidianBlack)
+                                            Icon(Icons.Default.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
                                             Spacer(modifier = Modifier.width(6.dp))
-                                            Text("+ Create New Contact", fontWeight = FontWeight.Bold)
+                                            Text("+ Create New Contact", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                                         }
                                     },
                                     onClick = {
@@ -524,18 +524,18 @@ fun AddTransactionScreen(
                                         )
                                     }
                                 } else if (diff > 0) {
-                                    Surface(shape = CircleShape, color = MutedSurface) {
+                                    Surface(shape = CircleShape, color = MaterialTheme.colorScheme.surfaceVariant) {
                                         Text(
                                             "${CurrencyUtils.formatAmount(diff, currency)} unallocated",
                                             style = MaterialTheme.typography.labelSmall.copy(
-                                                color = CharcoalSecondary,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 fontWeight = FontWeight.Medium
                                             ),
                                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                                         )
                                     }
                                     TextButton(onClick = viewModel::allocateRemainingToMe) {
-                                        Text("Add rest to me", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack))
+                                        Text("Add rest to me", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary))
                                     }
                                 } else {
                                     Surface(shape = CircleShape, color = RedNegativeBg) {
@@ -564,7 +564,7 @@ fun AddTransactionScreen(
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp,
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -572,13 +572,13 @@ fun AddTransactionScreen(
                         OutlinedTextField(
                             value = uiState.amountText,
                             onValueChange = viewModel::onAmountChanged,
-                            placeholder = { Text("0.00", color = CharcoalSecondary.copy(alpha = 0.5f)) },
+                            placeholder = { Text("0.00", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
                             prefix = {
                                 Text(
                                     "$currency ",
                                     fontSize = 28.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = ObsidianBlack
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             },
                             textStyle = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
@@ -587,10 +587,12 @@ fun AddTransactionScreen(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(14.dp),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = ObsidianBlack,
-                                unfocusedBorderColor = CardBorder,
-                                focusedContainerColor = MutedSurface.copy(alpha = 0.3f),
-                                unfocusedContainerColor = MutedSurface.copy(alpha = 0.2f)
+                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
                             )
                         )
                     }
@@ -602,7 +604,7 @@ fun AddTransactionScreen(
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, CardBorder),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
@@ -614,7 +616,7 @@ fun AddTransactionScreen(
 
                         Text(
                             text = personPrompt,
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = CharcoalSecondary)
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         )
 
                         Spacer(modifier = Modifier.height(10.dp))
@@ -626,19 +628,19 @@ fun AddTransactionScreen(
                                 readOnly = true,
                                 placeholder = { Text("Select contact") },
                                 leadingIcon = {
-                                    Icon(Icons.Default.Person, contentDescription = null, tint = ObsidianBlack)
+                                    Icon(Icons.Default.Person, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
                                 },
                                 trailingIcon = {
-                                    Icon(Icons.Default.ExpandMore, contentDescription = null)
+                                    Icon(Icons.Default.ExpandMore, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                                 enabled = false,
                                 colors = OutlinedTextFieldDefaults.colors(
-                                    disabledTextColor = ObsidianBlack,
-                                    disabledBorderColor = CardBorder,
-                                    disabledLeadingIconColor = ObsidianBlack,
-                                    disabledTrailingIconColor = CharcoalSecondary,
-                                    disabledContainerColor = MutedSurface.copy(alpha = 0.3f)
+                                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledBorderColor = MaterialTheme.colorScheme.outline,
+                                    disabledLeadingIconColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
                                 ),
                                 shape = RoundedCornerShape(12.dp)
                             )
@@ -665,9 +667,9 @@ fun AddTransactionScreen(
                                 DropdownMenuItem(
                                     text = {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Icon(Icons.Default.Add, contentDescription = null, tint = ObsidianBlack)
+                                            Icon(Icons.Default.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
                                             Spacer(modifier = Modifier.width(6.dp))
-                                            Text("+ Create New Contact", fontWeight = FontWeight.Bold)
+                                            Text("+ Create New Contact", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                                         }
                                     },
                                     onClick = {
@@ -686,7 +688,7 @@ fun AddTransactionScreen(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, CardBorder),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
@@ -695,7 +697,7 @@ fun AddTransactionScreen(
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp,
-                            color = CharcoalSecondary
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -703,15 +705,17 @@ fun AddTransactionScreen(
                     OutlinedTextField(
                         value = uiState.description,
                         onValueChange = viewModel::onDescriptionChanged,
-                        placeholder = { Text("e.g. Dinner with team, Flight booking", color = CharcoalSecondary.copy(alpha = 0.5f)) },
+                        placeholder = { Text("e.g. Dinner with team, Flight booking", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = ObsidianBlack,
-                            unfocusedBorderColor = CardBorder,
-                            focusedContainerColor = MutedSurface.copy(alpha = 0.3f),
-                            unfocusedContainerColor = MutedSurface.copy(alpha = 0.2f)
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
                         )
                     )
 
@@ -721,12 +725,12 @@ fun AddTransactionScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 10.dp)
-                                .background(MutedSurface, RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp))
                                 .padding(10.dp)
                         ) {
                             Text(
                                 text = "Past matches (tap to auto-fill):",
-                                style = MaterialTheme.typography.labelSmall.copy(color = CharcoalSecondary)
+                                style = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             uiState.suggestions.forEach { suggestion ->
@@ -741,7 +745,7 @@ fun AddTransactionScreen(
                                     Text(
                                         text = suggestion,
                                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                                        color = ObsidianBlack
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             }
@@ -757,21 +761,21 @@ fun AddTransactionScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.Repeat, contentDescription = null, tint = ObsidianBlack, modifier = Modifier.size(18.dp))
+                            Icon(Icons.Default.Repeat, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
                                 Text("Recurring expense?", style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold))
-                                Text("Summarized in Dashboard", style = MaterialTheme.typography.labelSmall.copy(color = CharcoalSecondary, fontSize = 11.sp))
+                                Text("Summarized in Dashboard", style = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp))
                             }
                         }
                         Switch(
                             checked = uiState.isRecurring,
                             onCheckedChange = viewModel::onRecurringToggled,
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
-                                checkedTrackColor = ObsidianBlack,
-                                uncheckedThumbColor = Color.White,
-                                uncheckedTrackColor = MutedSurface
+                                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
                             )
                         )
                     }
@@ -782,7 +786,7 @@ fun AddTransactionScreen(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, CardBorder),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
@@ -796,13 +800,13 @@ fun AddTransactionScreen(
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp,
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                         TextButton(onClick = { showAddCategoryDialog = true }) {
-                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp), tint = ObsidianBlack)
+                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onSurface)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("New", style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack))
+                            Text("New", style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface))
                         }
                     }
 
@@ -817,8 +821,8 @@ fun AddTransactionScreen(
                             val isSelected = uiState.selectedCategory?.id == category.id
                             Surface(
                                 shape = CircleShape,
-                                color = if (isSelected) AccentBlack else MutedSurface,
-                                border = BorderStroke(1.dp, if (isSelected) AccentBlack else CardBorder),
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                                border = BorderStroke(1.dp, if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
                                 modifier = Modifier.clickable { viewModel.onCategorySelected(category) }
                             ) {
                                 Row(
@@ -836,7 +840,7 @@ fun AddTransactionScreen(
                                         text = category.name,
                                         style = MaterialTheme.typography.labelSmall.copy(
                                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                            color = if (isSelected) Color.White else ObsidianBlack
+                                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
                                         )
                                     )
                                 }
@@ -850,7 +854,7 @@ fun AddTransactionScreen(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, CardBorder),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
@@ -865,8 +869,8 @@ fun AddTransactionScreen(
                     // Date Pill
                     Surface(
                         shape = CircleShape,
-                        color = MutedSurface,
-                        border = BorderStroke(1.dp, CardBorder),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                         modifier = Modifier
                             .weight(1f)
                             .clickable {
@@ -888,17 +892,17 @@ fun AddTransactionScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Icon(Icons.Default.CalendarToday, contentDescription = null, modifier = Modifier.size(15.dp), tint = ObsidianBlack)
+                            Icon(Icons.Default.CalendarToday, contentDescription = null, modifier = Modifier.size(15.dp), tint = MaterialTheme.colorScheme.onSurface)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(dateString, style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium))
+                            Text(dateString, style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onSurface))
                         }
                     }
 
                     // Time Pill
                     Surface(
                         shape = CircleShape,
-                        color = MutedSurface,
-                        border = BorderStroke(1.dp, CardBorder),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                         modifier = Modifier
                             .weight(1f)
                             .clickable {
@@ -922,9 +926,9 @@ fun AddTransactionScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Icon(Icons.Default.AccessTime, contentDescription = null, modifier = Modifier.size(15.dp), tint = ObsidianBlack)
+                            Icon(Icons.Default.AccessTime, contentDescription = null, modifier = Modifier.size(15.dp), tint = MaterialTheme.colorScheme.onSurface)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(uiState.timeFormatted.ifEmpty { "Time" }, style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium))
+                            Text(uiState.timeFormatted.ifEmpty { "Time" }, style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onSurface))
                         }
                     }
                 }
@@ -939,12 +943,12 @@ fun AddTransactionScreen(
                     .height(54.dp),
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AccentBlack,
-                    contentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
                 if (uiState.isSaving) {
-                    CircularProgressIndicator(modifier = Modifier.size(22.dp), color = Color.White, strokeWidth = 2.dp)
+                    CircularProgressIndicator(modifier = Modifier.size(22.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
                 } else {
                     Text(
                         "Log Spend",
@@ -970,6 +974,9 @@ fun AddTransactionScreen(
 
         AlertDialog(
             onDismissRequest = { showAddCategoryDialog = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
             title = { Text("New Category", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -979,10 +986,18 @@ fun AddTransactionScreen(
                         label = { Text("Category Name") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
                     )
 
-                    Text("Color", style = MaterialTheme.typography.labelSmall)
+                    Text("Color", style = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant))
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -1010,7 +1025,7 @@ fun AddTransactionScreen(
                         }
                     }
 
-                    Text("Icon", style = MaterialTheme.typography.labelSmall)
+                    Text("Icon", style = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant))
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -1020,8 +1035,8 @@ fun AddTransactionScreen(
                             val isChosen = selectedIcon == iconKey
                             Surface(
                                 shape = CircleShape,
-                                color = if (isChosen) MutedSurface else Color.Transparent,
-                                border = if (isChosen) BorderStroke(1.5.dp, ObsidianBlack) else null,
+                                color = if (isChosen) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent,
+                                border = if (isChosen) BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
                                 modifier = Modifier.clickable { selectedIcon = iconKey }
                             ) {
                                 CategoryIconBadge(iconName = iconKey, colorHex = selectedColor, size = 32.dp, iconSize = 18.dp)
@@ -1039,12 +1054,12 @@ fun AddTransactionScreen(
                         }
                     }
                 ) {
-                    Text("Add", fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                    Text("Add", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddCategoryDialog = false }) {
-                    Text("Cancel", color = CharcoalSecondary)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )
@@ -1055,6 +1070,9 @@ fun AddTransactionScreen(
         var personNameInput by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showAddPersonDialog = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
             title = { Text("New Contact", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
             text = {
                 OutlinedTextField(
@@ -1063,7 +1081,15 @@ fun AddTransactionScreen(
                     label = { Text("Name or Nickname") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
                 )
             },
             confirmButton = {
@@ -1075,12 +1101,12 @@ fun AddTransactionScreen(
                         }
                     }
                 ) {
-                    Text("Add", fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                    Text("Add", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddPersonDialog = false }) {
-                    Text("Cancel", color = CharcoalSecondary)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )

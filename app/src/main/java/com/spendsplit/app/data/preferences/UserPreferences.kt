@@ -21,7 +21,7 @@ class UserPreferences(private val context: Context) {
     }
 
     val themeFlow: Flow<String> = context.dataStore.data.map { preferences ->
-        preferences[KEY_THEME] ?: "SYSTEM" // "SYSTEM", "LIGHT", "DARK"
+        preferences[KEY_THEME] ?: "LIGHT" // Default to LIGHT for clean white/beige aesthetic
     }
 
     suspend fun setCurrency(currency: String) {

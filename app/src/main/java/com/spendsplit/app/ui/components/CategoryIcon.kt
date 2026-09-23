@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.spendsplit.app.ui.theme.CardBorder
 
 object CategoryIcons {
     val AVAILABLE_ICONS = listOf(

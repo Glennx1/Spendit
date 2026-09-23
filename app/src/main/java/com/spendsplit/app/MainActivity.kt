@@ -4,13 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Category
@@ -22,7 +18,6 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -33,10 +28,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -57,11 +50,6 @@ import com.spendsplit.app.ui.people.PeopleScreen
 import com.spendsplit.app.ui.people.PeopleViewModel
 import com.spendsplit.app.ui.people.PeopleViewModelFactory
 import com.spendsplit.app.ui.settings.SettingsDialog
-import com.spendsplit.app.ui.theme.AccentBlack
-import com.spendsplit.app.ui.theme.CardBorder
-import com.spendsplit.app.ui.theme.CharcoalSecondary
-import com.spendsplit.app.ui.theme.MutedSurface
-import com.spendsplit.app.ui.theme.ObsidianBlack
 import com.spendsplit.app.ui.theme.SpendSplitTheme
 
 class MainActivity : ComponentActivity() {
@@ -72,11 +60,11 @@ class MainActivity : ComponentActivity() {
         val repository = (application as SpendSplitApp).repository
 
         setContent {
-            val themePref by repository.themeFlow.collectAsState(initial = "SYSTEM")
+            val themePref by repository.themeFlow.collectAsState(initial = "LIGHT")
             val isDark = when (themePref) {
                 "DARK" -> true
                 "LIGHT" -> false
-                else -> isSystemInDarkTheme()
+                else -> false // Default clean white/beige Apple aesthetic
             }
 
             SpendSplitTheme(darkTheme = isDark) {
@@ -109,8 +97,9 @@ fun MainAppContent(repository: com.spendsplit.app.data.repository.FinanceReposit
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            val borderColor = CardBorder
+            val borderColor = MaterialTheme.colorScheme.outline
             NavigationBar(
                 containerColor = MaterialTheme.colorScheme.surface,
                 modifier = Modifier.drawBehind {
@@ -123,11 +112,11 @@ fun MainAppContent(repository: com.spendsplit.app.data.repository.FinanceReposit
                 }
             ) {
                 val navColors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.White,
-                    selectedTextColor = ObsidianBlack,
-                    indicatorColor = AccentBlack,
-                    unselectedIconColor = CharcoalSecondary,
-                    unselectedTextColor = CharcoalSecondary
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                    indicatorColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 // Dashboard

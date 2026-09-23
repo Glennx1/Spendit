@@ -61,15 +61,8 @@ import com.spendsplit.app.ui.components.CurrencyText
 import com.spendsplit.app.ui.components.CurrencyUtils
 import com.spendsplit.app.ui.components.DonutChart
 import com.spendsplit.app.ui.components.SpendOverTimeChart
-import com.spendsplit.app.ui.theme.AccentBlack
-import com.spendsplit.app.ui.theme.BeigeBackground
-import com.spendsplit.app.ui.theme.CardBorder
-import com.spendsplit.app.ui.theme.CardBorderSubtle
-import com.spendsplit.app.ui.theme.CharcoalSecondary
 import com.spendsplit.app.ui.theme.GreenPositive
 import com.spendsplit.app.ui.theme.GreenPositiveBg
-import com.spendsplit.app.ui.theme.MutedSurface
-import com.spendsplit.app.ui.theme.ObsidianBlack
 import com.spendsplit.app.ui.theme.RedNegative
 import com.spendsplit.app.ui.theme.RedNegativeBg
 import java.text.SimpleDateFormat
@@ -97,20 +90,20 @@ fun DashboardScreen(
                             "SpendSplit",
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = ObsidianBlack
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Surface(
                             shape = CircleShape,
-                            color = MutedSurface,
-                            border = BorderStroke(1.dp, CardBorder)
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                         ) {
                             Text(
                                 text = currency,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = ObsidianBlack
+                                    color = MaterialTheme.colorScheme.onSurface
                                 ),
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
@@ -119,18 +112,18 @@ fun DashboardScreen(
                 },
                 actions = {
                     IconButton(onClick = { isSearchVisible = !isSearchVisible }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search", tint = ObsidianBlack)
+                        Icon(Icons.Default.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.onBackground)
                     }
                     IconButton(onClick = onOpenSettings) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = ObsidianBlack)
+                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = MaterialTheme.colorScheme.onBackground)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = BeigeBackground
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
-        containerColor = BeigeBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -145,12 +138,12 @@ fun DashboardScreen(
                     OutlinedTextField(
                         value = uiState.searchQuery,
                         onValueChange = viewModel::onSearchQueryChanged,
-                        placeholder = { Text("Search transactions, notes, people...", color = CharcoalSecondary.copy(alpha = 0.5f)) },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = ObsidianBlack) },
+                        placeholder = { Text("Search transactions, notes, people...", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface) },
                         trailingIcon = {
                             if (uiState.searchQuery.isNotEmpty()) {
                                 IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                    Icon(Icons.Default.Close, contentDescription = "Clear", tint = CharcoalSecondary)
+                                    Icon(Icons.Default.Close, contentDescription = "Clear", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                             }
                         },
@@ -158,10 +151,12 @@ fun DashboardScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(14.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = ObsidianBlack,
-                            unfocusedBorderColor = CardBorder,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface
                         )
                     )
                 }
@@ -172,7 +167,7 @@ fun DashboardScreen(
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, CardBorder),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -185,7 +180,7 @@ fun DashboardScreen(
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp,
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
 
@@ -196,7 +191,7 @@ fun DashboardScreen(
                             currency = currency,
                             style = MaterialTheme.typography.headlineLarge.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = ObsidianBlack
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         )
 
@@ -234,7 +229,7 @@ fun DashboardScreen(
                             Text(
                                 text = "Previous month: ${CurrencyUtils.formatAmount(uiState.prevMonthSpent, currency)}",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -253,15 +248,15 @@ fun DashboardScreen(
                         val isSelected = uiState.selectedDateFilter == filter
                         Surface(
                             shape = CircleShape,
-                            color = if (isSelected) AccentBlack else MutedSurface,
-                            border = BorderStroke(1.dp, if (isSelected) AccentBlack else CardBorder),
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                            border = BorderStroke(1.dp, if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
                             modifier = Modifier.clickable { viewModel.selectDateFilter(filter) }
                         ) {
                             Text(
                                 text = filter.label,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isSelected) Color.White else ObsidianBlack
+                                    color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
                                 ),
                                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
                             )
@@ -275,7 +270,7 @@ fun DashboardScreen(
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, CardBorder),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -290,22 +285,32 @@ fun DashboardScreen(
                         ) {
                             Text(
                                 text = "Spend by Category",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             if (uiState.selectedCategoryId != null) {
                                 Surface(
                                     shape = CircleShape,
-                                    color = MutedSurface,
-                                    border = BorderStroke(1.dp, CardBorder),
+                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                     modifier = Modifier.clickable { viewModel.selectCategory(null) }
                                 ) {
                                     Row(
                                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text("Clear filter", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium))
+                                        Text(
+                                            "Clear filter",
+                                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
                                         Spacer(modifier = Modifier.width(4.dp))
-                                        Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(12.dp))
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(12.dp),
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
                                     }
                                 }
                             }
@@ -323,7 +328,7 @@ fun DashboardScreen(
                                 Text(
                                     text = "No category spends recorded",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = CharcoalSecondary
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         } else {
@@ -354,7 +359,7 @@ fun DashboardScreen(
                     Surface(
                         shape = RoundedCornerShape(20.dp),
                         color = MaterialTheme.colorScheme.surface,
-                        border = BorderStroke(1.dp, CardBorder),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(
@@ -363,11 +368,12 @@ fun DashboardScreen(
                                 .padding(18.dp)
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Default.Repeat, contentDescription = null, tint = ObsidianBlack, modifier = Modifier.size(18.dp))
+                                Icon(Icons.Default.Repeat, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "Recurring Spends",
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
 
@@ -380,8 +386,8 @@ fun DashboardScreen(
                                     val dateFmt = SimpleDateFormat("dd MMM", Locale.getDefault())
                                     Surface(
                                         shape = RoundedCornerShape(14.dp),
-                                        color = MutedSurface.copy(alpha = 0.5f),
-                                        border = BorderStroke(1.dp, CardBorder),
+                                        color = MaterialTheme.colorScheme.surfaceVariant,
+                                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                         modifier = Modifier.width(160.dp)
                                     ) {
                                         Column(modifier = Modifier.padding(12.dp)) {
@@ -396,17 +402,18 @@ fun DashboardScreen(
                                                 Text(
                                                     text = rec.description,
                                                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                                    color = MaterialTheme.colorScheme.onSurface,
                                                     maxLines = 1
                                                 )
                                             }
                                             Spacer(modifier = Modifier.height(8.dp))
                                             Text(
                                                 text = "Avg: ${CurrencyUtils.formatAmount(rec.averageAmount, currency)}",
-                                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                                             )
                                             Text(
                                                 text = "${rec.count} entries • Last ${dateFmt.format(Date(rec.lastDateEpoch))}",
-                                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, color = CharcoalSecondary)
+                                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                             )
                                         }
                                     }
@@ -426,7 +433,8 @@ fun DashboardScreen(
                 ) {
                     Text(
                         text = "Transactions (${uiState.filteredTransactions.size})",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
@@ -443,7 +451,7 @@ fun DashboardScreen(
                         Text(
                             text = "No transactions found",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = CharcoalSecondary
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -455,7 +463,7 @@ fun DashboardScreen(
                     Surface(
                         shape = RoundedCornerShape(16.dp),
                         color = MaterialTheme.colorScheme.surface,
-                        border = BorderStroke(1.dp, CardBorder),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
@@ -476,20 +484,20 @@ fun DashboardScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = transaction.description,
-                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(
                                         text = "$dateFormatted • ${transaction.time}",
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = CharcoalSecondary
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     if (transaction.personName != null) {
                                         Text(
                                             text = " • with ${transaction.personName}",
                                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
-                                            color = ObsidianBlack
+                                            color = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                     if (transaction.isRecurring) {
@@ -498,14 +506,14 @@ fun DashboardScreen(
                                             Icons.Default.Repeat,
                                             contentDescription = "Recurring",
                                             modifier = Modifier.size(11.dp),
-                                            tint = CharcoalSecondary
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
                                 }
                                 if (!transaction.splitDetails.isNullOrBlank()) {
                                     Text(
                                         text = transaction.splitDetails,
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, color = CharcoalSecondary),
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant),
                                         maxLines = 1
                                     )
                                 }
@@ -520,7 +528,7 @@ fun DashboardScreen(
                                 CurrencyText(
                                     amount = displayAmount,
                                     currency = currency,
-                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                                 )
 
                                 val typeLabel = when (transaction.type) {
@@ -536,7 +544,7 @@ fun DashboardScreen(
                                     color = when (transaction.type) {
                                         "owed_to_me" -> GreenPositive
                                         "i_owe" -> RedNegative
-                                        else -> CharcoalSecondary
+                                        else -> MaterialTheme.colorScheme.onSurfaceVariant
                                     }
                                 )
                             }
@@ -548,7 +556,7 @@ fun DashboardScreen(
                                 Icon(
                                     Icons.Default.Delete,
                                     contentDescription = "Delete",
-                                    tint = CharcoalSecondary.copy(alpha = 0.5f),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                                     modifier = Modifier.size(15.dp)
                                 )
                             }
@@ -567,6 +575,9 @@ fun DashboardScreen(
     transactionToDelete?.let { tx ->
         AlertDialog(
             onDismissRequest = { transactionToDelete = null },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
             title = { Text("Delete Entry?", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
             text = { Text("Are you sure you want to remove '${tx.description}'? If this was a split bill, all associated shares will also be removed.") },
             confirmButton = {
@@ -581,7 +592,7 @@ fun DashboardScreen(
             },
             dismissButton = {
                 TextButton(onClick = { transactionToDelete = null }) {
-                    Text("Cancel", color = CharcoalSecondary)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )

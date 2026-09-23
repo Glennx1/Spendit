@@ -31,6 +31,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -54,14 +55,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendsplit.app.ui.components.CurrencyUtils
-import com.spendsplit.app.ui.theme.AccentBlack
-import com.spendsplit.app.ui.theme.BeigeBackground
-import com.spendsplit.app.ui.theme.CardBorder
-import com.spendsplit.app.ui.theme.CharcoalSecondary
 import com.spendsplit.app.ui.theme.GreenPositive
 import com.spendsplit.app.ui.theme.GreenPositiveBg
-import com.spendsplit.app.ui.theme.MutedSurface
-import com.spendsplit.app.ui.theme.ObsidianBlack
 import com.spendsplit.app.ui.theme.RedNegative
 import com.spendsplit.app.ui.theme.RedNegativeBg
 
@@ -93,27 +88,27 @@ fun PeopleScreen(
                         "People & IOUs",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
-                            color = ObsidianBlack
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = BeigeBackground
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddPersonDialog = true },
-                containerColor = AccentBlack,
-                contentColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = CircleShape
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Contact")
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = BeigeBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -127,7 +122,7 @@ fun PeopleScreen(
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, CardBorder),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -140,14 +135,14 @@ fun PeopleScreen(
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp,
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
 
                         val netSign = if (summary.netBalance > 0) "+ " else if (summary.netBalance < 0) "- " else ""
-                        val netColor = if (summary.netBalance > 0) GreenPositive else if (summary.netBalance < 0) RedNegative else ObsidianBlack
+                        val netColor = if (summary.netBalance > 0) GreenPositive else if (summary.netBalance < 0) RedNegative else MaterialTheme.colorScheme.onSurface
                         Text(
                             text = "$netSign${CurrencyUtils.formatAmount(kotlin.math.abs(summary.netBalance), currency)}",
                             style = MaterialTheme.typography.headlineLarge.copy(
@@ -183,7 +178,7 @@ fun PeopleScreen(
                                         Text(
                                             "You are owed",
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = CharcoalSecondary
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         Text(
                                             CurrencyUtils.formatAmount(summary.totalOwedToMe, currency),
@@ -215,7 +210,7 @@ fun PeopleScreen(
                                         Text(
                                             "You owe",
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = CharcoalSecondary
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         Text(
                                             CurrencyUtils.formatAmount(summary.totalIOwe, currency),
@@ -236,7 +231,7 @@ fun PeopleScreen(
                     text = "Contacts (${people.size})",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = ObsidianBlack
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
             }
@@ -254,19 +249,19 @@ fun PeopleScreen(
                                 Icons.Default.People,
                                 contentDescription = null,
                                 modifier = Modifier.size(44.dp),
-                                tint = CharcoalSecondary.copy(alpha = 0.5f)
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                             )
                             Spacer(modifier = Modifier.height(10.dp))
                             Text(
                                 "No contacts added yet",
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 "Tap + to add a contact or split a spend",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = CharcoalSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -276,7 +271,7 @@ fun PeopleScreen(
                     Surface(
                         shape = RoundedCornerShape(16.dp),
                         color = MaterialTheme.colorScheme.surface,
-                        border = BorderStroke(1.dp, CardBorder),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { viewModel.selectPerson(item) }
@@ -291,15 +286,15 @@ fun PeopleScreen(
                                 modifier = Modifier
                                     .size(42.dp)
                                     .clip(CircleShape)
-                                    .background(MutedSurface)
-                                    .border(1.dp, CardBorder, CircleShape),
+                                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = item.person.name.take(1).uppercase(),
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         fontWeight = FontWeight.Bold,
-                                        color = ObsidianBlack
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 )
                             }
@@ -311,7 +306,7 @@ fun PeopleScreen(
                                     text = item.person.name,
                                     style = MaterialTheme.typography.bodyLarge.copy(
                                         fontWeight = FontWeight.Bold,
-                                        color = ObsidianBlack
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 )
                                 val status = when {
@@ -325,7 +320,7 @@ fun PeopleScreen(
                                     color = when {
                                         item.balance > 0 -> GreenPositive
                                         item.balance < 0 -> RedNegative
-                                        else -> CharcoalSecondary
+                                        else -> MaterialTheme.colorScheme.onSurfaceVariant
                                     }
                                 )
                             }
@@ -334,7 +329,7 @@ fun PeopleScreen(
                                 val amountColor = when {
                                     item.balance > 0 -> GreenPositive
                                     item.balance < 0 -> RedNegative
-                                    else -> CharcoalSecondary
+                                    else -> MaterialTheme.colorScheme.onSurfaceVariant
                                 }
                                 Text(
                                     text = CurrencyUtils.formatAmount(kotlin.math.abs(item.balance), currency),
@@ -347,7 +342,7 @@ fun PeopleScreen(
                             Icon(
                                 Icons.Default.ChevronRight,
                                 contentDescription = null,
-                                tint = CharcoalSecondary.copy(alpha = 0.6f),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -378,6 +373,9 @@ fun PeopleScreen(
         var personNameInput by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showAddPersonDialog = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
             title = { Text("New Contact", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
             text = {
                 OutlinedTextField(
@@ -385,6 +383,16 @@ fun PeopleScreen(
                     onValueChange = { personNameInput = it },
                     label = { Text("Full Name or Nickname") },
                     singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
                 )
@@ -398,12 +406,12 @@ fun PeopleScreen(
                         }
                     }
                 ) {
-                    Text("Add", fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                    Text("Add", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddPersonDialog = false }) {
-                    Text("Cancel", color = CharcoalSecondary)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )

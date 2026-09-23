@@ -31,12 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendsplit.app.data.repository.FinanceRepository
-import com.spendsplit.app.ui.theme.AccentBlack
-import com.spendsplit.app.ui.theme.CardBorder
-import com.spendsplit.app.ui.theme.CardBorderSubtle
-import com.spendsplit.app.ui.theme.CharcoalSecondary
-import com.spendsplit.app.ui.theme.MutedSurface
-import com.spendsplit.app.ui.theme.ObsidianBlack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,12 +62,15 @@ fun SettingsDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        titleContentColor = MaterialTheme.colorScheme.onSurface,
+        textContentColor = MaterialTheme.colorScheme.onSurface,
         title = {
             Text(
                 "Preferences",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    color = ObsidianBlack
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             )
         },
@@ -88,7 +85,7 @@ fun SettingsDialog(
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp,
-                        color = CharcoalSecondary
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
 
@@ -97,8 +94,8 @@ fun SettingsDialog(
                         val isSelected = currentCurrency == symbol
                         Surface(
                             shape = RoundedCornerShape(10.dp),
-                            color = if (isSelected) MutedSurface else Color.Transparent,
-                            border = if (isSelected) BorderStroke(1.dp, CardBorder) else null,
+                            color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent,
+                            border = if (isSelected) BorderStroke(1.dp, MaterialTheme.colorScheme.outline) else null,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
@@ -118,13 +115,13 @@ fun SettingsDialog(
                                     Text(
                                         text = symbol,
                                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                        color = ObsidianBlack
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Text(
                                         text = label,
                                         style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = if (isSelected) ObsidianBlack else CharcoalSecondary
+                                            color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     )
                                 }
@@ -132,7 +129,7 @@ fun SettingsDialog(
                                     Icon(
                                         Icons.Default.Check,
                                         contentDescription = null,
-                                        tint = ObsidianBlack
+                                        tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
                             }
@@ -140,7 +137,7 @@ fun SettingsDialog(
                     }
                 }
 
-                HorizontalDivider(color = CardBorderSubtle)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
                 // Theme selection
                 Text(
@@ -148,7 +145,7 @@ fun SettingsDialog(
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp,
-                        color = CharcoalSecondary
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
 
@@ -157,8 +154,8 @@ fun SettingsDialog(
                         val isSelected = currentTheme == code
                         Surface(
                             shape = RoundedCornerShape(10.dp),
-                            color = if (isSelected) MutedSurface else Color.Transparent,
-                            border = if (isSelected) BorderStroke(1.dp, CardBorder) else null,
+                            color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent,
+                            border = if (isSelected) BorderStroke(1.dp, MaterialTheme.colorScheme.outline) else null,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
@@ -177,14 +174,14 @@ fun SettingsDialog(
                                 Text(
                                     text = label,
                                     style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = if (isSelected) ObsidianBlack else CharcoalSecondary
+                                        color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 )
                                 if (isSelected) {
                                     Icon(
                                         Icons.Default.Check,
                                         contentDescription = null,
-                                        tint = ObsidianBlack
+                                        tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
                             }
@@ -192,24 +189,24 @@ fun SettingsDialog(
                     }
                 }
 
-                HorizontalDivider(color = CardBorderSubtle)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
                 // About section
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         Icons.Default.Info,
                         contentDescription = null,
-                        tint = CharcoalSecondary,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Column {
                         Text(
                             text = "SpendSplit",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                         )
                         Text(
                             text = "100% offline personal finance & group IOU engine.",
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, color = CharcoalSecondary)
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         )
                     }
                 }
@@ -217,7 +214,7 @@ fun SettingsDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Done", fontWeight = FontWeight.Bold, color = ObsidianBlack)
+                Text("Done", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
             }
         }
     )
