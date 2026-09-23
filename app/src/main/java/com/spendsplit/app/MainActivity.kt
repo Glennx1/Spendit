@@ -4,10 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -15,15 +15,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.People
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,7 +31,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -53,6 +57,11 @@ import com.spendsplit.app.ui.people.PeopleScreen
 import com.spendsplit.app.ui.people.PeopleViewModel
 import com.spendsplit.app.ui.people.PeopleViewModelFactory
 import com.spendsplit.app.ui.settings.SettingsDialog
+import com.spendsplit.app.ui.theme.AccentBlack
+import com.spendsplit.app.ui.theme.CardBorder
+import com.spendsplit.app.ui.theme.CharcoalSecondary
+import com.spendsplit.app.ui.theme.MutedSurface
+import com.spendsplit.app.ui.theme.ObsidianBlack
 import com.spendsplit.app.ui.theme.SpendSplitTheme
 
 class MainActivity : ComponentActivity() {
@@ -101,9 +110,26 @@ fun MainAppContent(repository: com.spendsplit.app.data.repository.FinanceReposit
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
+            val borderColor = CardBorder
             NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier.drawBehind {
+                    drawLine(
+                        color = borderColor,
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, 0f),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                }
             ) {
+                val navColors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,
+                    selectedTextColor = ObsidianBlack,
+                    indicatorColor = AccentBlack,
+                    unselectedIconColor = CharcoalSecondary,
+                    unselectedTextColor = CharcoalSecondary
+                )
+
                 // Dashboard
                 NavigationBarItem(
                     selected = currentRoute == Screen.Dashboard.route,
@@ -115,10 +141,11 @@ fun MainAppContent(repository: com.spendsplit.app.data.repository.FinanceReposit
                         }
                     },
                     icon = { Icon(Icons.Default.Dashboard, contentDescription = "Dashboard") },
-                    label = { Text("Dashboard") }
+                    label = { Text("Dashboard", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium)) },
+                    colors = navColors
                 )
 
-                // Add Spend (center action item)
+                // Add Spend (Center action)
                 NavigationBarItem(
                     selected = currentRoute == Screen.Add.route,
                     onClick = {
@@ -131,11 +158,11 @@ fun MainAppContent(repository: com.spendsplit.app.data.repository.FinanceReposit
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add Spend",
-                            tint = if (currentRoute == Screen.Add.route) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                            contentDescription = "Add Spend"
                         )
                     },
-                    label = { Text("Add") }
+                    label = { Text("New", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium)) },
+                    colors = navColors
                 )
 
                 // People / IOUs
@@ -148,8 +175,9 @@ fun MainAppContent(repository: com.spendsplit.app.data.repository.FinanceReposit
                             restoreState = true
                         }
                     },
-                    icon = { Icon(Icons.Default.People, contentDescription = "People") },
-                    label = { Text("People") }
+                    icon = { Icon(Icons.Default.People, contentDescription = "Contacts") },
+                    label = { Text("People", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium)) },
+                    colors = navColors
                 )
 
                 // Categories
@@ -163,7 +191,8 @@ fun MainAppContent(repository: com.spendsplit.app.data.repository.FinanceReposit
                         }
                     },
                     icon = { Icon(Icons.Default.Category, contentDescription = "Categories") },
-                    label = { Text("Categories") }
+                    label = { Text("Categories", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium)) },
+                    colors = navColors
                 )
             }
         }

@@ -1,10 +1,12 @@
 package com.spendsplit.app.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.FitnessCenter
@@ -12,7 +14,6 @@ import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalGasStation
 import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.spendsplit.app.ui.theme.CardBorder
 
 object CategoryIcons {
     val AVAILABLE_ICONS = listOf(
@@ -41,7 +43,7 @@ object CategoryIcons {
         "Car" to Icons.Default.DirectionsCar,
         "Work" to Icons.Default.Work,
         "Education" to Icons.Default.School,
-        "Bills" to Icons.Default.ReceiptLong,
+        "Bills" to Icons.AutoMirrored.Filled.ReceiptLong,
         "Other" to Icons.Default.Category
     )
 
@@ -57,25 +59,26 @@ fun CategoryIconBadge(
     colorHex: String,
     modifier: Modifier = Modifier,
     size: Dp = 40.dp,
-    iconSize: Dp = 22.dp
+    iconSize: Dp = 20.dp
 ) {
-    val bg = try {
+    val color = try {
         Color(android.graphics.Color.parseColor(colorHex))
     } catch (e: Exception) {
-        Color(0xFF607D8B)
+        Color(0xFF71717A)
     }
 
     Box(
         modifier = modifier
             .size(size)
             .clip(CircleShape)
-            .background(bg.copy(alpha = 0.18f)),
+            .background(color.copy(alpha = 0.12f))
+            .border(1.dp, color.copy(alpha = 0.25f), CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = CategoryIcons.getIcon(iconName),
             contentDescription = iconName,
-            tint = bg,
+            tint = color,
             modifier = Modifier.size(iconSize)
         )
     }

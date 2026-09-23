@@ -63,11 +63,78 @@ class FinanceRepository(
     suspend fun insertTransaction(transaction: TransactionEntity): Long =
         transactionDao.insert(transaction)
 
+    suspend fun insertMultiPersonSplit(
+        totalAmount: Double,
+        myShare: Double,
+        participants: List<Pair<PersonEntity, Double>>,
+        dateEpoch: Long,
+        timeFormatted: String,
+        categoryId: Long,
+        categoryName: String,
+        description: String,
+        isRecurring: Boolean
+    ): String {
+        val splitGroupId = java.util.UUID.randomUUID().toString()
+        val namesSummary = participants.joinToString(", ") { it.first.name }
+        val breakdown = buildString {
+            append("Total: ${String.format(java.util.Locale.US, "%.2f", totalAmount)} • You: ${String.format(java.util.Locale.US, "%.2f", myShare)}")
+            participants.forEach { (p, share) ->
+                append(", ${p.name}: ${String.format(java.util.Locale.US, "%.2f", share)}")
+            }
+        }
+
+        // Parent personal spend transaction (My share)
+        val parentTransaction = TransactionEntity(
+            amount = myShare,
+            date = dateEpoch,
+            time = timeFormatted,
+            categoryId = categoryId,
+            categoryName = categoryName,
+            description = description.ifBlank { "Split bill with $namesSummary" },
+            type = "split",
+            totalAmount = totalAmount,
+            myShare = myShare,
+            theirShare = totalAmount - myShare,
+            personName = namesSummary,
+            splitGroupId = splitGroupId,
+            splitDetails = breakdown,
+            isRecurring = isRecurring
+        )
+
+        // Child records for each participant
+        val childTransactions = participants.map { (person, share) ->
+            TransactionEntity(
+                amount = share,
+                date = dateEpoch,
+                time = timeFormatted,
+                categoryId = categoryId,
+                categoryName = categoryName,
+                description = "${description.ifBlank { "Split bill" }} (${person.name}'s share)",
+                type = "owed_to_me",
+                theirShare = share,
+                personId = person.id,
+                personName = person.name,
+                splitGroupId = splitGroupId,
+                splitDetails = breakdown,
+                isRecurring = false
+            )
+        }
+
+        transactionDao.insert(parentTransaction)
+        transactionDao.insertAll(childTransactions)
+        return splitGroupId
+    }
+
     suspend fun updateTransaction(transaction: TransactionEntity) =
         transactionDao.update(transaction)
 
-    suspend fun deleteTransaction(transaction: TransactionEntity) =
-        transactionDao.delete(transaction)
+    suspend fun deleteTransaction(transaction: TransactionEntity) {
+        if (!transaction.splitGroupId.isNullOrBlank()) {
+            transactionDao.deleteBySplitGroupId(transaction.splitGroupId)
+        } else {
+            transactionDao.delete(transaction)
+        }
+    }
 
     suspend fun deleteTransactionById(id: Long) =
         transactionDao.deleteById(id)

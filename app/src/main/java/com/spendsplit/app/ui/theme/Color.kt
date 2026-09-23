@@ -2,23 +2,30 @@ package com.spendsplit.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Brand palette - Emerald Green primary with clean dark/light accents
-val Emerald80 = Color(0xFFA7F3D0)
-val EmeraldGrey80 = Color(0xFFC7D2FE)
-val Mint80 = Color(0xFF6EE7B7)
+// Apple-inspired minimalist palette: Warm porcelain beige, crisp obsidian black, stone accents
+val BeigeBackground = Color(0xFFFAF7F2)       // Warm soft beige / alabaster
+val CardSurface = Color(0xFFFFFFFF)           // Pure crisp white card surface
+val MutedSurface = Color(0xFFF2EFE9)          // Soft warm linen for pills, inputs, chips
+val CardBorder = Color(0xFFEBE6DC)            // Hairline elegant border
+val CardBorderSubtle = Color(0xFFF0ECE4)
 
-val Emerald40 = Color(0xFF059669)
-val EmeraldGrey40 = Color(0xFF4F46E5)
-val Mint40 = Color(0xFF10B981)
+// Text
+val ObsidianBlack = Color(0xFF18181B)         // Crisp obsidian primary text
+val CharcoalSecondary = Color(0xFF52525B)     // Stone secondary text
+val MutedSlate = Color(0xFFA1A1AA)            // Muted placeholder text
 
-val GreenPositive = Color(0xFF10B981)
-val RedNegative = Color(0xFFEF4444)
-val NeutralGray = Color(0xFF6B7280)
+// Functional Accents
+val AccentBlack = Color(0xFF18181B)           // Primary button & active indicator
+val GreenPositive = Color(0xFF15803D)         // Muted Apple forest green
+val GreenPositiveBg = Color(0xFFDCFCE7)       // Subtle green badge background
+val RedNegative = Color(0xFFB91C1C)           // Muted Apple crimson
+val RedNegativeBg = Color(0xFFFEE2E2)         // Subtle red badge background
+val NeutralGray = Color(0xFF71717A)
 
-val SurfaceDark = Color(0xFF121826)
-val BackgroundDark = Color(0xFF0F172A)
-val CardDark = Color(0xFF1E293B)
-
-val SurfaceLight = Color(0xFFFFFFFF)
-val BackgroundLight = Color(0xFFF8FAFC)
-val CardLight = Color(0xFFF1F5F9)
+// Dark Mode
+val DarkBackground = Color(0xFF121212)
+val DarkSurface = Color(0xFF1C1C1E)
+val DarkMutedSurface = Color(0xFF2C2C2E)
+val DarkBorder = Color(0xFF38383A)
+val DarkTextPrimary = Color(0xFFF4F4F5)
+val DarkTextSecondary = Color(0xFFA1A1AA)

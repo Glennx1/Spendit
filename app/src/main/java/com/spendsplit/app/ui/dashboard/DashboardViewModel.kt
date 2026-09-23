@@ -216,6 +216,9 @@ class DashboardViewModel(
 
         // Transaction List filtered by DateFilter + CategoryId + SearchQuery
         val filteredList = transactions.filter { t ->
+            val isChildSplit = t.splitGroupId != null && t.type == "owed_to_me"
+            if (isChildSplit) return@filter false
+
             val matchesCat = selectedCatId == null || t.categoryId == selectedCatId
             val matchesDate = when (dateFilter) {
                 DateFilter.THIS_MONTH -> t.date >= startOfThisMonth

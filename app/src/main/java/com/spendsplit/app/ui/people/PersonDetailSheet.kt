@@ -1,6 +1,8 @@
 package com.spendsplit.app.ui.people
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Handshake
 import androidx.compose.material3.AlertDialog
@@ -29,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,11 +48,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendsplit.app.data.local.entity.TransactionEntity
 import com.spendsplit.app.data.repository.PersonWithBalance
-import com.spendsplit.app.ui.components.CurrencyText
 import com.spendsplit.app.ui.components.CurrencyUtils
+import com.spendsplit.app.ui.theme.AccentBlack
+import com.spendsplit.app.ui.theme.CardBorder
+import com.spendsplit.app.ui.theme.CardBorderSubtle
+import com.spendsplit.app.ui.theme.CharcoalSecondary
 import com.spendsplit.app.ui.theme.GreenPositive
-import com.spendsplit.app.ui.theme.NeutralGray
+import com.spendsplit.app.ui.theme.GreenPositiveBg
+import com.spendsplit.app.ui.theme.MutedSurface
+import com.spendsplit.app.ui.theme.ObsidianBlack
 import com.spendsplit.app.ui.theme.RedNegative
+import com.spendsplit.app.ui.theme.RedNegativeBg
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -93,20 +99,26 @@ fun PersonDetailSheet(
                         modifier = Modifier
                             .size(46.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primaryContainer),
+                            .background(MutedSurface)
+                            .border(1.dp, CardBorder, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = personWithBalance.person.name.take(1).uppercase(),
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = ObsidianBlack
+                            )
                         )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
                             text = personWithBalance.person.name,
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = ObsidianBlack
+                            )
                         )
                         val statusText = when {
                             personWithBalance.balance > 0 -> "Owes you ${CurrencyUtils.formatAmount(personWithBalance.balance, currency)}"
@@ -116,7 +128,7 @@ fun PersonDetailSheet(
                         val statusColor = when {
                             personWithBalance.balance > 0 -> GreenPositive
                             personWithBalance.balance < 0 -> RedNegative
-                            else -> NeutralGray
+                            else -> CharcoalSecondary
                         }
                         Text(
                             text = statusText,
@@ -129,27 +141,29 @@ fun PersonDetailSheet(
                 IconButton(onClick = { showDeleteConfirm = true }) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Delete Person",
-                        tint = MaterialTheme.colorScheme.outline
+                        contentDescription = "Delete Contact",
+                        tint = CharcoalSecondary.copy(alpha = 0.6f),
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Settle Up Button
+            // Settle Up Action
             if (personWithBalance.balance != 0.0) {
                 Button(
                     onClick = { showSettleConfirm = true },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    shape = RoundedCornerShape(14.dp),
+                    shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (personWithBalance.balance > 0) GreenPositive else RedNegative
+                        containerColor = AccentBlack,
+                        contentColor = Color.White
                     )
                 ) {
-                    Icon(Icons.Default.Handshake, contentDescription = null)
+                    Icon(Icons.Default.Handshake, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Settle Up (${CurrencyUtils.formatAmount(kotlin.math.abs(personWithBalance.balance), currency)})",
@@ -158,42 +172,46 @@ fun PersonDetailSheet(
                 }
             } else {
                 Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    shape = CircleShape,
+                    color = MutedSurface,
+                    border = BorderStroke(1.dp, CardBorder),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
-                        modifier = Modifier.padding(14.dp),
+                        modifier = Modifier.padding(12.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.CheckCircle, contentDescription = null, tint = GreenPositive)
+                        Icon(Icons.Default.Check, contentDescription = null, tint = GreenPositive, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("No outstanding balance with ${personWithBalance.person.name}", style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            "All settled up with ${personWithBalance.person.name}",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
+                        )
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-            HorizontalDivider()
-            Spacer(modifier = Modifier.height(12.dp))
+            HorizontalDivider(color = CardBorderSubtle)
+            Spacer(modifier = Modifier.height(14.dp))
 
             // History header
             Text(
                 text = "Transaction History (${transactions.size})",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold, color = ObsidianBlack)
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             if (transactions.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 24.dp),
+                        .padding(vertical = 30.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No transactions logged with this person", color = MaterialTheme.colorScheme.outline)
+                    Text("No transactions logged with this contact", color = CharcoalSecondary)
                 }
             } else {
                 LazyColumn(
@@ -205,27 +223,38 @@ fun PersonDetailSheet(
                     items(transactions, key = { it.id }) { tx ->
                         val dateFmt = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                         Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
+                            shape = RoundedCornerShape(14.dp),
+                            color = MutedSurface.copy(alpha = 0.4f),
+                            border = BorderStroke(1.dp, CardBorder),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(12.dp),
+                                    .padding(14.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = tx.description,
-                                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = ObsidianBlack
+                                        )
                                     )
                                     Text(
                                         text = "${dateFmt.format(Date(tx.date))} • ${tx.time}",
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.outline
+                                        color = CharcoalSecondary
                                     )
+                                    if (!tx.splitDetails.isNullOrBlank()) {
+                                        Text(
+                                            text = tx.splitDetails,
+                                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, color = CharcoalSecondary),
+                                            maxLines = 1
+                                        )
+                                    }
                                 }
 
                                 Column(horizontalAlignment = Alignment.End) {
@@ -247,8 +276,8 @@ fun PersonDetailSheet(
                                         "owed_to_me" -> GreenPositive
                                         "i_owe" -> RedNegative
                                         "split" -> GreenPositive
-                                        "settlement" -> MaterialTheme.colorScheme.primary
-                                        else -> MaterialTheme.colorScheme.onSurface
+                                        "settlement" -> ObsidianBlack
+                                        else -> ObsidianBlack
                                     }
 
                                     Text(
@@ -266,7 +295,7 @@ fun PersonDetailSheet(
                                     }
                                     Text(
                                         text = subtitle,
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Medium),
                                         color = color
                                     )
                                 }
@@ -278,14 +307,14 @@ fun PersonDetailSheet(
         }
     }
 
-    // Settle confirmation dialog
+    // Settle confirmation
     if (showSettleConfirm) {
         val amountStr = CurrencyUtils.formatAmount(kotlin.math.abs(personWithBalance.balance), currency)
         AlertDialog(
             onDismissRequest = { showSettleConfirm = false },
-            title = { Text("Confirm Settlement") },
+            title = { Text("Confirm Settlement", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
             text = {
-                Text("This will record a settlement of $amountStr and bring the balance with ${personWithBalance.person.name} to 0. Proceed?")
+                Text("Zero out outstanding balance of $amountStr with ${personWithBalance.person.name} and log a settlement record?")
             },
             confirmButton = {
                 TextButton(
@@ -294,23 +323,23 @@ fun PersonDetailSheet(
                         showSettleConfirm = false
                     }
                 ) {
-                    Text("Confirm Settle Up", fontWeight = FontWeight.Bold)
+                    Text("Settle Up", fontWeight = FontWeight.Bold, color = ObsidianBlack)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showSettleConfirm = false }) {
-                    Text("Cancel")
+                    Text("Cancel", color = CharcoalSecondary)
                 }
             }
         )
     }
 
-    // Delete Person confirmation dialog
+    // Delete confirmation
     if (showDeleteConfirm) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
-            title = { Text("Delete Person?") },
-            text = { Text("Are you sure you want to remove ${personWithBalance.person.name}? Note: associated transactions will remain.") },
+            title = { Text("Delete Contact?", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
+            text = { Text("Remove ${personWithBalance.person.name}? Existing transactions will remain logged.") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -318,12 +347,12 @@ fun PersonDetailSheet(
                         showDeleteConfirm = false
                     }
                 ) {
-                    Text("Delete", color = RedNegative)
+                    Text("Delete", color = RedNegative, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirm = false }) {
-                    Text("Cancel")
+                    Text("Cancel", color = CharcoalSecondary)
                 }
             }
         )

@@ -1,5 +1,6 @@
 package com.spendsplit.app.ui.categories
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +26,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -59,6 +58,12 @@ import com.spendsplit.app.data.local.entity.CategoryEntity
 import com.spendsplit.app.ui.components.CategoryIconBadge
 import com.spendsplit.app.ui.components.CategoryIcons
 import com.spendsplit.app.ui.components.CurrencyUtils
+import com.spendsplit.app.ui.theme.AccentBlack
+import com.spendsplit.app.ui.theme.BeigeBackground
+import com.spendsplit.app.ui.theme.CardBorder
+import com.spendsplit.app.ui.theme.CharcoalSecondary
+import com.spendsplit.app.ui.theme.MutedSurface
+import com.spendsplit.app.ui.theme.ObsidianBlack
 import com.spendsplit.app.ui.theme.RedNegative
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -75,9 +80,8 @@ fun CategoriesScreen(
     var showAddDialog by remember { mutableStateOf(false) }
 
     val colorPalette = listOf(
-        "#FF5722", "#2196F3", "#9C27B0", "#FF9800",
-        "#E91E63", "#673AB7", "#009688", "#607D8B",
-        "#10B981", "#3B82F6", "#8B5CF6", "#EF4444"
+        "#18181B", "#52525B", "#2563EB", "#059669",
+        "#D97706", "#DC2626", "#7C3AED", "#DB2777"
     )
 
     LaunchedEffect(Unit) {
@@ -92,39 +96,42 @@ fun CategoriesScreen(
                 title = {
                     Text(
                         "Categories",
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = ObsidianBlack
+                        )
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = BeigeBackground
                 )
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = AccentBlack,
+                contentColor = Color.White,
                 shape = CircleShape
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Category")
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = BeigeBackground
     ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
                 Text(
-                    text = "Manage your spend categories and track totals.",
+                    text = "Manage your spend categories and inspect category expenditure.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline
+                    color = CharcoalSecondary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
             }
@@ -134,7 +141,7 @@ fun CategoriesScreen(
                 Surface(
                     shape = RoundedCornerShape(16.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 1.dp,
+                    border = BorderStroke(1.dp, CardBorder),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
@@ -146,8 +153,8 @@ fun CategoriesScreen(
                         CategoryIconBadge(
                             iconName = cat.iconName,
                             colorHex = cat.colorHex,
-                            size = 46.dp,
-                            iconSize = 24.dp
+                            size = 42.dp,
+                            iconSize = 22.dp
                         )
 
                         Spacer(modifier = Modifier.width(12.dp))
@@ -156,19 +163,22 @@ fun CategoriesScreen(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
                                     text = cat.name,
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = ObsidianBlack
+                                    )
                                 )
                                 if (cat.isDefault) {
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Surface(
-                                        shape = RoundedCornerShape(6.dp),
-                                        color = MaterialTheme.colorScheme.surfaceVariant
+                                        shape = CircleShape,
+                                        color = MutedSurface
                                     ) {
                                         Text(
                                             text = "Default",
                                             style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
-                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                                            color = MaterialTheme.colorScheme.outline
+                                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                            color = CharcoalSecondary
                                         )
                                     }
                                 }
@@ -179,13 +189,13 @@ fun CategoriesScreen(
                             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                                 Text(
                                     text = "This Month: ${CurrencyUtils.formatAmount(item.thisMonthSpend, currency)}",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.primary
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                                    color = ObsidianBlack
                                 )
                                 Text(
                                     text = "All-Time: ${CurrencyUtils.formatAmount(item.allTimeSpend, currency)}",
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.outline
+                                    color = CharcoalSecondary
                                 )
                             }
                         }
@@ -195,8 +205,8 @@ fun CategoriesScreen(
                             Icon(
                                 Icons.Default.Edit,
                                 contentDescription = "Edit",
-                                tint = MaterialTheme.colorScheme.outline,
-                                modifier = Modifier.size(18.dp)
+                                tint = CharcoalSecondary.copy(alpha = 0.7f),
+                                modifier = Modifier.size(16.dp)
                             )
                         }
 
@@ -205,8 +215,8 @@ fun CategoriesScreen(
                                 Icon(
                                     Icons.Default.Delete,
                                     contentDescription = "Delete",
-                                    tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
-                                    modifier = Modifier.size(18.dp)
+                                    tint = CharcoalSecondary.copy(alpha = 0.5f),
+                                    modifier = Modifier.size(16.dp)
                                 )
                             }
                         }
@@ -228,7 +238,7 @@ fun CategoriesScreen(
 
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
-            title = { Text("Add Category") },
+            title = { Text("New Category", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
@@ -236,7 +246,8 @@ fun CategoriesScreen(
                         onValueChange = { newName = it },
                         label = { Text("Name") },
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp)
                     )
 
                     Text("Color", style = MaterialTheme.typography.labelSmall)
@@ -277,7 +288,8 @@ fun CategoriesScreen(
                             val isSel = chosenIcon == iconKey
                             Surface(
                                 shape = CircleShape,
-                                color = if (isSel) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+                                color = if (isSel) MutedSurface else Color.Transparent,
+                                border = if (isSel) BorderStroke(1.5.dp, ObsidianBlack) else null,
                                 modifier = Modifier.clickable { chosenIcon = iconKey }
                             ) {
                                 CategoryIconBadge(
@@ -300,12 +312,12 @@ fun CategoriesScreen(
                         }
                     }
                 ) {
-                    Text("Add")
+                    Text("Add", fontWeight = FontWeight.Bold, color = ObsidianBlack)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddDialog = false }) {
-                    Text("Cancel")
+                    Text("Cancel", color = CharcoalSecondary)
                 }
             }
         )
@@ -319,7 +331,7 @@ fun CategoriesScreen(
 
         AlertDialog(
             onDismissRequest = { categoryToEdit = null },
-            title = { Text("Edit Category") },
+            title = { Text("Edit Category", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
@@ -327,7 +339,8 @@ fun CategoriesScreen(
                         onValueChange = { editName = it },
                         label = { Text("Name") },
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp)
                     )
 
                     Text("Color", style = MaterialTheme.typography.labelSmall)
@@ -368,7 +381,8 @@ fun CategoriesScreen(
                             val isSel = editIcon == iconKey
                             Surface(
                                 shape = CircleShape,
-                                color = if (isSel) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+                                color = if (isSel) MutedSurface else Color.Transparent,
+                                border = if (isSel) BorderStroke(1.5.dp, ObsidianBlack) else null,
                                 modifier = Modifier.clickable { editIcon = iconKey }
                             ) {
                                 CategoryIconBadge(
@@ -391,12 +405,12 @@ fun CategoriesScreen(
                         }
                     }
                 ) {
-                    Text("Save")
+                    Text("Save", fontWeight = FontWeight.Bold, color = ObsidianBlack)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { categoryToEdit = null }) {
-                    Text("Cancel")
+                    Text("Cancel", color = CharcoalSecondary)
                 }
             }
         )
@@ -406,7 +420,7 @@ fun CategoriesScreen(
     categoryToDelete?.let { cat ->
         AlertDialog(
             onDismissRequest = { categoryToDelete = null },
-            title = { Text("Delete Category?") },
+            title = { Text("Delete Category?", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) },
             text = {
                 Text("Deleting '${cat.name}' will reassign any existing transactions in this category to 'Other'. Are you sure?")
             },
@@ -417,12 +431,12 @@ fun CategoriesScreen(
                         categoryToDelete = null
                     }
                 ) {
-                    Text("Delete", color = RedNegative)
+                    Text("Delete", color = RedNegative, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { categoryToDelete = null }) {
-                    Text("Cancel")
+                    Text("Cancel", color = CharcoalSecondary)
                 }
             }
         )

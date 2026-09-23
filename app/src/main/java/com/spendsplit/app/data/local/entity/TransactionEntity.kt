@@ -10,7 +10,8 @@ import androidx.room.PrimaryKey
         Index(value = ["description"]),
         Index(value = ["personId"]),
         Index(value = ["categoryId"]),
-        Index(value = ["date"])
+        Index(value = ["date"]),
+        Index(value = ["splitGroupId"])
     ]
 )
 data class TransactionEntity(
@@ -28,6 +29,8 @@ data class TransactionEntity(
     val theirShare: Double? = null,
     val personId: Long? = null,
     val personName: String? = null,
+    val splitGroupId: String? = null,
+    val splitDetails: String? = null,
     val isRecurring: Boolean = false,
     val createdAt: Long = System.currentTimeMillis()
 )

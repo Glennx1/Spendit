@@ -38,8 +38,17 @@ interface TransactionDao {
     @Query("UPDATE transactions SET categoryId = :newCategoryId, categoryName = :newCategoryName WHERE categoryId = :oldCategoryId")
     suspend fun reassignCategory(oldCategoryId: Long, newCategoryId: Long, newCategoryName: String)
 
+    @Query("SELECT * FROM transactions WHERE splitGroupId = :splitGroupId")
+    suspend fun getTransactionsBySplitGroupId(splitGroupId: String): List<TransactionEntity>
+
+    @Query("DELETE FROM transactions WHERE splitGroupId = :splitGroupId")
+    suspend fun deleteBySplitGroupId(splitGroupId: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(transaction: TransactionEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(transactions: List<TransactionEntity>): List<Long>
 
     @Update
     suspend fun update(transaction: TransactionEntity)

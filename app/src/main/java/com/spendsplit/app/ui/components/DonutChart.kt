@@ -3,6 +3,7 @@ package com.spendsplit.app.ui.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,6 +41,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.spendsplit.app.ui.theme.CardBorder
+import com.spendsplit.app.ui.theme.CardBorderSubtle
+import com.spendsplit.app.ui.theme.MutedSurface
 import kotlin.math.atan2
 
 data class CategorySpendItem(
@@ -57,7 +61,7 @@ fun DonutChart(
     currency: String,
     modifier: Modifier = Modifier,
     chartSize: Dp = 190.dp,
-    strokeWidth: Dp = 26.dp,
+    strokeWidth: Dp = 20.dp,
     selectedCategoryId: Long? = null,
     onCategoryClick: (Long?) -> Unit = {}
 ) {
@@ -90,7 +94,6 @@ fun DonutChart(
                             val dy = offset.y - center.y
                             var angle = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat()
                             if (angle < 0) angle += 360f
-                            // Adjust for -90 offset start angle
                             val adjustedAngle = (angle + 90f) % 360f
 
                             var currentAngle = 0f
@@ -118,7 +121,7 @@ fun DonutChart(
 
                 // Background track
                 drawArc(
-                    color = Color.LightGray.copy(alpha = 0.2f),
+                    color = CardBorderSubtle,
                     startAngle = 0f,
                     sweepAngle = 360f,
                     useCenter = false,
@@ -138,7 +141,7 @@ fun DonutChart(
                         }
 
                         val isSelected = selectedCategoryId == null || selectedCategoryId == item.categoryId
-                        val effectiveColor = if (isSelected) itemColor else itemColor.copy(alpha = 0.3f)
+                        val effectiveColor = if (isSelected) itemColor else itemColor.copy(alpha = 0.25f)
                         val effectiveStroke = if (selectedCategoryId == item.categoryId) strokePx * 1.15f else strokePx
 
                         drawArc(
@@ -171,7 +174,7 @@ fun DonutChart(
                     Text(
                         text = CurrencyUtils.formatAmount(selectedItem.amount, currency),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = "${String.format("%.1f", selectedItem.percentage)}%",
@@ -210,20 +213,20 @@ fun DonutChart(
                 }
 
                 Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (isSelected) color.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    border = if (isSelected) androidx.compose.foundation.BorderStroke(1.5.dp, color) else null,
+                    shape = CircleShape,
+                    color = if (isSelected) color.copy(alpha = 0.15f) else MutedSurface,
+                    border = BorderStroke(1.dp, if (isSelected) color else CardBorder),
                     modifier = Modifier.clickable {
                         onCategoryClick(if (isSelected) null else item.categoryId)
                     }
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(9.dp)
+                                .size(8.dp)
                                 .clip(CircleShape)
                                 .background(color)
                         )
@@ -235,7 +238,10 @@ fun DonutChart(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "${String.format("%.0f", item.percentage)}%",
-                            style = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.outline, fontSize = 10.sp)
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 10.sp
+                            )
                         )
                     }
                 }
